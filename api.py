@@ -51,13 +51,15 @@ async def terraform_agent_call(request: terraform_agent_request):
         session=request.session
         response = await agent.run(
             prompt=request.prompt,
-            session=session
+            session=session,
+            task_id=task_id
         )
         if response:
             logger.info("[terraform_agent] Successfully generated Terraform agent instance.")
             print("[terraform_agent] Successfully generated Terraform agent instance.")
             output, is_json = try_parse_json(response.text)
             ato().update_task(
+                    db=db,
                     task_id=task_id,
                     task = AgentTaskDetailsUpdateRequest(
                         db=db,
